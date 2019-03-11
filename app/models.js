@@ -48,6 +48,8 @@ type EventBase = {
   mergeTime: ?Dateish,
   useCaptcha: boolean,
   tags: Array<Tags>,
+  registrationDeadlineHours: number,
+  registrationCloseTime: Dateish,
   unregistrationDeadline: Dateish,
   pinned: boolean
 };

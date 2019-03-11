@@ -36,6 +36,8 @@ import {
 } from 'app/components/Content';
 import Tooltip from 'app/components/Tooltip';
 import type { ID } from 'app/models';
+import { FormatTime } from 'app/components/Time';
+import moment from 'moment-timezone';
 
 type Props = {
   eventId: number,
@@ -263,7 +265,22 @@ function EventEditor({
                 normalize={v => !!v}
               />
             </Tooltip>
-            <Tooltip content="Frist for avmelding – fører til prikk etterpå">
+
+            <Tooltip content="Frist for påmelding - antall timer før arrangementet">
+              <Field
+                key="registrationDeadlineHours"
+                label="Påmeldingsfrist"
+                name="registrationDeadlineHours"
+                type="number"
+                component={TextInput.Field}
+                fieldClassName={styles.metaField}
+                className={styles.formField}
+              />
+            </Tooltip>
+            <p className={styles.registrationDeadlineHours}>
+              <FormatTime time={moment(event.registrationDeadline)} />
+            </p>
+            <Tooltip content="Frist for avmelding – kan føre til prikk etterpå">
               <Field
                 key="unregistrationDeadline"
                 label="Avregistreringsfrist"

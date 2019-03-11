@@ -56,6 +56,8 @@ const eventCreateAndUpdateFields = [
   'useCaptcha',
   'tags',
   'pools',
+  'registrationDeadlineHours',
+  'registrationCloseTime',
   'unregistrationDeadline',
   'pinned',
   'heedPenalties',
