@@ -16,6 +16,7 @@ import replaceUnlessLoggedIn from 'app/utils/replaceUnlessLoggedIn';
 import { isEmpty } from 'lodash';
 import { fetchEvent } from 'app/actions/EventActions';
 import loadingIndicator from 'app/utils/loadingIndicator';
+import moment from 'moment';
 
 const mapStateToProps = (state, props) => {
   const actionGrant = state.events.actionGrant;
@@ -60,7 +61,8 @@ const mapStateToProps = (state, props) => {
       useConsent: false,
       feedbackDescription: 'Melding til arrangører',
       pools: [],
-      unregistrationDeadline: time({ hours: 12 })
+      unregistrationDeadline: time({ hours: 12 }),
+      registrationDeadlineHours: 2
     },
     actionGrant,
     ...selectedValues
@@ -104,6 +106,18 @@ const mapStateToProps = (state, props) => {
       responsibleGroup: eventTemplate.responsibleGroup && {
         label: eventTemplate.responsibleGroup.name,
         value: eventTemplate.responsibleGroup.id
+      },
+      event: {
+        addFee: valueSelector(state, 'addFee'),
+        isPriced: valueSelector(state, 'isPriced'),
+        eventType: valueSelector(state, 'eventType'),
+        priceMember: valueSelector(state, 'priceMember'),
+        registrationDeadline:
+          valueSelector(state, 'startTime') &&
+          moment(valueSelector(state, 'startTime')).subtract(
+            valueSelector(state, 'registrationDeadlineHours'),
+            'hours'
+          )
       }
     },
     actionGrant,

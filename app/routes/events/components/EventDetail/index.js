@@ -187,6 +187,10 @@ export default class EventDetail extends Component<Props> {
         key: 'Påmelding åpner',
         value: <FormatTime time={event.activationTime} />
       },
+      event.registrationDeadlineHours && {
+        key: 'Påmelding stenger',
+        value: <FormatTime time={event.registrationCloseTime} />
+      },
       event.unregistrationDeadline && {
         key: 'Avregistreringsfrist',
         value: <FormatTime time={event.unregistrationDeadline} />
