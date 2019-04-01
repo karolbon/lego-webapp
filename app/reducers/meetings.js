@@ -17,7 +17,8 @@ export type MeetingEntity = {
   report: string,
   invitations: Array<number>,
   reportAuthor: number,
-  createdBy: number
+  createdBy: number,
+  mazemapPoi: number
 };
 
 export type MeetingSection = {
