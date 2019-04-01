@@ -5,6 +5,7 @@ import Select from 'react-select';
 import { createField } from './Field';
 import style from './SelectInput.css';
 import withAutocomplete from '../Search/withAutocomplete';
+import mazemapAutocomplete from '../Search/mazemapAutocomplete';
 import 'react-select/dist/react-select.min.css';
 
 type Props = {
@@ -90,4 +91,5 @@ function SelectInput({
 SelectInput.Field = createField(SelectInput);
 SelectInput.AutocompleteField = withAutocomplete(SelectInput.Field);
 SelectInput.withAutocomplete = withAutocomplete(SelectInput);
+SelectInput.mazemapAutocomplete = mazemapAutocomplete(SelectInput.Field);
 export default SelectInput;

@@ -76,7 +76,8 @@ export type Event = EventBase & {
   isUserFollowing: UserFollowing,
   unansweredSurveys: Array<ID>,
   responsibleGroup: Group,
-  price?: number
+  price?: number,
+  mazemapPoi: number
 };
 
 export type TransformEvent = EventBase & {
