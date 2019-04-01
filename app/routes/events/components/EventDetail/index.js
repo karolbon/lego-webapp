@@ -366,6 +366,19 @@ export default class EventDetail extends Component<Props> {
             </p>
           )}
 
+          {event.mazemapPoi && (
+            <iframe
+              className={styles.mazemap}
+              src={
+                'https://use.mazemap.com/embed.html?sharepoitype=poi&sharepoi=' +
+                event.mazemapPoi
+              }
+              width="100%"
+              height="400"
+              scrolling="no"
+            />
+          )}
+
           {event.commentTarget && (
             <CommentView
               style={{ marginTop: 20 }}
