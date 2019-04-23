@@ -25,15 +25,21 @@ export type ArticleEntity = {
   youtubeUrl: string
 };
 
-const mutateArticle = (state: any, action: any) =>
-  produce(state, newState => {
-    switch (action.type) {
-      case Article.DELETE.SUCCESS:
-        newState.items = newState.items.filter(
-          id => id !== action.meta.articleId
-        );
+type State = any;
+
+const mutateArticle = (state: State, action: any): State =>
+  produce(
+    state,
+    (newState: State): void => {
+      switch (action.type) {
+        case Article.DELETE.SUCCESS:
+          newState.items = newState.items.filter(
+            id => id !== action.meta.articleId
+          );
+          break;
+      }
     }
-  });
+  );
 
 const mutate = joinReducers(mutateComments('articles'), mutateArticle);
 
