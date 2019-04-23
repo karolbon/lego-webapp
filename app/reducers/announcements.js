@@ -4,6 +4,7 @@ import { createSelector } from 'reselect';
 import { Announcements } from '../actions/ActionTypes';
 import createEntityReducer from 'app/utils/createEntityReducer';
 import moment from 'moment-timezone';
+import produce from 'immer';
 
 export default createEntityReducer({
   key: 'announcements',
@@ -11,30 +12,19 @@ export default createEntityReducer({
     fetch: Announcements.FETCH_ALL,
     mutate: Announcements.CREATE
   },
-  mutate(state, action) {
-    switch (action.type) {
-      case Announcements.SEND.SUCCESS: {
-        const { announcementId } = action.meta;
-        return {
-          ...state,
-          byId: {
-            ...state.byId,
-            [announcementId]: {
-              ...state.byId[announcementId],
-              sent: moment()
-            }
-          }
-        };
+  mutate: (state, action) =>
+    produce(state, newState => {
+      switch (action.type) {
+        case Announcements.SEND.SUCCESS:
+          newState.byId[action.meta.announcementId].sent = moment();
+          break;
+        case Announcements.DELETE.SUCCESS:
+          newState.items = newState.items.filter(
+            id => action.meta.announcementId !== id
+          );
+          break;
       }
-      case Announcements.DELETE.SUCCESS:
-        return {
-          ...state,
-          items: state.items.filter(id => action.meta.announcementId !== id)
-        };
-      default:
-        return state;
-    }
-  }
+    })
 });
 
 export const selectAnnouncements = createSelector(

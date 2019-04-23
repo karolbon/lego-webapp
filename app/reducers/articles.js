@@ -6,6 +6,7 @@ import { mutateComments } from 'app/reducers/comments';
 import createEntityReducer from 'app/utils/createEntityReducer';
 import joinReducers from 'app/utils/joinReducers';
 import { orderBy } from 'lodash';
+import produce from 'immer';
 
 export type ArticleEntity = {
   id: number,
@@ -24,19 +25,15 @@ export type ArticleEntity = {
   youtubeUrl: string
 };
 
-function mutateArticle(state: any, action: any) {
-  switch (action.type) {
-    case Article.DELETE.SUCCESS: {
-      const { articleId } = action.meta;
-      return {
-        ...state,
-        items: state.items.filter(id => id !== articleId)
-      };
+const mutateArticle = (state: any, action: any) =>
+  produce(state, newState => {
+    switch (action.type) {
+      case Article.DELETE.SUCCESS:
+        newState.items = newState.items.filter(
+          id => id !== action.meta.articleId
+        );
     }
-    default:
-      return state;
-  }
-}
+  });
 
 const mutate = joinReducers(mutateComments('articles'), mutateArticle);
 
