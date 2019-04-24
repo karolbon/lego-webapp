@@ -7,6 +7,7 @@ import createEntityReducer from 'app/utils/createEntityReducer';
 import { selectGroupsWithType } from './groups';
 import { selectGroup } from 'app/reducers/groups';
 import { selectMembershipsForGroup } from 'app/reducers/memberships';
+import { pull } from 'lodash';
 import produce from 'immer';
 
 export type PageEntity = {
@@ -30,9 +31,7 @@ export default createEntityReducer({
     (newState: State, action: any): void => {
       switch (action.type) {
         case Page.DELETE.SUCCESS:
-          newState.items = newState.items.filter(
-            id => action.meta.pageSlug !== id
-          );
+          pull(newState.items, action.meta.pageSlug);
       }
     }
   )

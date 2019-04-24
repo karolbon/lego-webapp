@@ -2,6 +2,7 @@
 import { createSelector } from 'reselect';
 import { Penalty } from '../actions/ActionTypes';
 import createEntityReducer from 'app/utils/createEntityReducer';
+import { pull } from 'lodash';
 import produce from 'immer';
 
 type State = any;
@@ -16,9 +17,7 @@ export default createEntityReducer({
     (newState: State, action: any): void => {
       switch (action.type) {
         case Penalty.DELETE.SUCCESS:
-          newState.items = newState.items.filter(
-            id => action.meta.penaltyId !== id
-          );
+          pull(newState.items, action.meta.penaltyId);
       }
     }
   )

@@ -6,6 +6,7 @@ import { createSelector } from 'reselect';
 import { mutateComments } from 'app/reducers/comments';
 import joinReducers from 'app/utils/joinReducers';
 import type { ID } from 'app/models';
+import { pull } from 'lodash';
 import produce from 'immer';
 
 export type QuoteEntity = {
@@ -25,9 +26,7 @@ const mutateQuote = produce(
   (newState: State, action: any): void => {
     switch (action.type) {
       case Quote.DELETE.SUCCESS:
-        newState.items = newState.items.filter(
-          id => id !== action.meta.quoteId
-        );
+        pull(newState.items, action.meta.quoteId);
         break;
 
       case Quote.UNAPPROVE.SUCCESS:

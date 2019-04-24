@@ -4,6 +4,7 @@ import { createSelector } from 'reselect';
 import { Announcements } from '../actions/ActionTypes';
 import createEntityReducer from 'app/utils/createEntityReducer';
 import moment from 'moment-timezone';
+import { pull } from 'lodash';
 import produce from 'immer';
 
 type State = any;
@@ -21,9 +22,7 @@ export default createEntityReducer({
           newState.byId[action.meta.announcementId].sent = moment();
           break;
         case Announcements.DELETE.SUCCESS:
-          newState.items = newState.items.filter(
-            id => action.meta.announcementId !== id
-          );
+          pull(newState.items, action.meta.announcementId);
           break;
       }
     }

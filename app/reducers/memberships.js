@@ -4,6 +4,7 @@ import { createSelector } from 'reselect';
 import createEntityReducer from 'app/utils/createEntityReducer';
 import { Membership, Group } from '../actions/ActionTypes';
 import { selectGroup } from './groups';
+import { remove } from 'lodash';
 import produce from 'immer';
 
 type State = any;
@@ -19,9 +20,9 @@ export default createEntityReducer({
       switch (action.type) {
         case Membership.LEAVE_GROUP.SUCCESS: {
           const { groupId, username } = action.meta;
-          newState.items = newState.items.filter(i => {
-            const m = newState.byId[i];
-            return m.abakusGroup !== groupId || m.user !== username;
+          remove(newState.items, id => {
+            const m = newState.byId[id];
+            return m.abakusGroup === groupId && m.user === username;
           });
         }
       }

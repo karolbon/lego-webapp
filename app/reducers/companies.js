@@ -10,6 +10,7 @@ import { selectCompanySemesters } from './companySemesters';
 import type { UserEntity } from 'app/reducers/users';
 import type { CompanySemesterContactedStatus, Semester } from 'app/models';
 import { selectJoblistings } from 'app/reducers/joblistings';
+import { pull, remove } from 'lodash';
 import produce from 'immer';
 
 export type BaseCompanyEntity = {
@@ -80,7 +81,7 @@ const mutateCompanies = produce(
   (newState: State, action: any): void => {
     switch (action.type) {
       case Company.DELETE.SUCCESS:
-        newState.items = newState.items.filter(id => id !== action.meta.id);
+        pull(newState.items, action.meta.id);
         break;
 
       case Company.ADD_SEMESTER_STATUS.SUCCESS:
@@ -100,10 +101,9 @@ const mutateCompanies = produce(
 
       case Company.DELETE_SEMESTER_STATUS.SUCCESS: {
         const companyId = action.meta.companyId;
-        newState.byId[companyId].semesterStatuses = newState.byId[
-          companyId
-        ].semesterStatuses.filter(
-          status => status.id !== action.meta.semesterId
+        remove(
+          newState.byId[companyId].semesterStatuses,
+          status => status.id === action.meta.semesterId
         );
         break;
       }
@@ -125,10 +125,9 @@ const mutateCompanies = produce(
 
       case Company.DELETE_COMPANY_CONTACT.SUCCESS: {
         const companyId = action.meta.companyId;
-        newState.byId[companyId].companyContacts = newState.byId[
-          companyId
-        ].companyContacts.filter(
-          contact => contact.id !== action.meta.companyContactId
+        remove(
+          newState.byId[companyId].companyContacts,
+          contact => contact.id === action.meta.companyContactId
         );
         break;
       }
