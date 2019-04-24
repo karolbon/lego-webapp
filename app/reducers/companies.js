@@ -76,68 +76,65 @@ export type CompanyContactEntity = {
 
 type State = any;
 
-function mutateCompanies(state: State, action) {
-  return produce(
-    state,
-    (newState: State): void => {
-      switch (action.type) {
-        case Company.DELETE.SUCCESS:
-          newState.items = newState.items.filter(id => id !== action.meta.id);
-          break;
+const mutateCompanies = produce(
+  (newState: State, action: any): void => {
+    switch (action.type) {
+      case Company.DELETE.SUCCESS:
+        newState.items = newState.items.filter(id => id !== action.meta.id);
+        break;
 
-        case Company.ADD_SEMESTER_STATUS.SUCCESS:
-          newState.byId[action.meta.companyId].semesterStatuses.push(
-            action.payload
-          );
-          break;
+      case Company.ADD_SEMESTER_STATUS.SUCCESS:
+        newState.byId[action.meta.companyId].semesterStatuses.push(
+          action.payload
+        );
+        break;
 
-        case Company.EDIT_SEMESTER_STATUS.SUCCESS: {
-          const { companyId, semesterStatusId } = action.meta;
-          const index = newState.byId[companyId].semesterStatuses.findIndex(
-            s => s.id === semesterStatusId
-          );
-          newState.byId[companyId].semesterStatuses[index] = action.payload;
-          break;
-        }
+      case Company.EDIT_SEMESTER_STATUS.SUCCESS: {
+        const { companyId, semesterStatusId } = action.meta;
+        const index = newState.byId[companyId].semesterStatuses.findIndex(
+          s => s.id === semesterStatusId
+        );
+        newState.byId[companyId].semesterStatuses[index] = action.payload;
+        break;
+      }
 
-        case Company.DELETE_SEMESTER_STATUS.SUCCESS: {
-          const companyId = action.meta.companyId;
-          newState.byId[companyId].semesterStatuses = newState.byId[
-            companyId
-          ].semesterStatuses.filter(
-            status => status.id !== action.meta.semesterId
-          );
-          break;
-        }
+      case Company.DELETE_SEMESTER_STATUS.SUCCESS: {
+        const companyId = action.meta.companyId;
+        newState.byId[companyId].semesterStatuses = newState.byId[
+          companyId
+        ].semesterStatuses.filter(
+          status => status.id !== action.meta.semesterId
+        );
+        break;
+      }
 
-        case Company.ADD_COMPANY_CONTACT.SUCCESS:
-          newState.byId[action.meta.companyId].companyContacts = (
-            newState.byId[action.meta.companyId].companyContacts || []
-          ).concat(action.payload);
-          break;
+      case Company.ADD_COMPANY_CONTACT.SUCCESS:
+        newState.byId[action.meta.companyId].companyContacts = (
+          newState.byId[action.meta.companyId].companyContacts || []
+        ).concat(action.payload);
+        break;
 
-        case Company.EDIT_COMPANY_CONTACT.SUCCESS: {
-          const companyId = action.meta.companyId;
-          const index = newState.byId[companyId].companyContacts.findIndex(
-            cc => cc.id === action.payload.id
-          );
-          newState.byId[companyId].companyContacts[index] = action.payload;
-          break;
-        }
+      case Company.EDIT_COMPANY_CONTACT.SUCCESS: {
+        const companyId = action.meta.companyId;
+        const index = newState.byId[companyId].companyContacts.findIndex(
+          cc => cc.id === action.payload.id
+        );
+        newState.byId[companyId].companyContacts[index] = action.payload;
+        break;
+      }
 
-        case Company.DELETE_COMPANY_CONTACT.SUCCESS: {
-          const companyId = action.meta.companyId;
-          newState.byId[companyId].companyContacts = newState.byId[
-            companyId
-          ].companyContacts.filter(
-            contact => contact.id !== action.meta.companyContactId
-          );
-          break;
-        }
+      case Company.DELETE_COMPANY_CONTACT.SUCCESS: {
+        const companyId = action.meta.companyId;
+        newState.byId[companyId].companyContacts = newState.byId[
+          companyId
+        ].companyContacts.filter(
+          contact => contact.id !== action.meta.companyContactId
+        );
+        break;
       }
     }
-  );
-}
+  }
+);
 
 const mutate = joinReducers(mutateComments('companies'), mutateCompanies);
 

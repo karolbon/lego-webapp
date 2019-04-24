@@ -27,19 +27,17 @@ export type ArticleEntity = {
 
 type State = any;
 
-const mutateArticle = (state: State, action: any): State =>
-  produce(
-    state,
-    (newState: State): void => {
-      switch (action.type) {
-        case Article.DELETE.SUCCESS:
-          newState.items = newState.items.filter(
-            id => id !== action.meta.articleId
-          );
-          break;
-      }
+const mutateArticle = produce(
+  (newState: State, action: any): void => {
+    switch (action.type) {
+      case Article.DELETE.SUCCESS:
+        newState.items = newState.items.filter(
+          id => id !== action.meta.articleId
+        );
+        break;
     }
-  );
+  }
+);
 
 const mutate = joinReducers(mutateComments('articles'), mutateArticle);
 

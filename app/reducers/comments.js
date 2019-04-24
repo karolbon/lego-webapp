@@ -20,42 +20,34 @@ type State = any;
 /**
  * Used by the individual entity reducers
  */
-export function mutateComments(forTargetType: string) {
-  return (state: State, action: any) => {
-    return produce(
-      state,
-      (newState: State): void => {
-        switch (action.type) {
-          case Comment.ADD.SUCCESS: {
-            const [
-              serverTargetType,
-              targetId
-            ] = action.meta.commentTarget.split('-');
-            const targetType = getEntityType(serverTargetType);
-            if (targetType === forTargetType) {
-              newState.byId[targetId].comments.push(action.payload.result);
-            }
+export const mutateComments = (forTargetType: string) =>
+  produce(
+    (newState: State, action: any): void => {
+      switch (action.type) {
+        case Comment.ADD.SUCCESS: {
+          const [serverTargetType, targetId] = action.meta.commentTarget.split(
+            '-'
+          );
+          const targetType = getEntityType(serverTargetType);
+          if (targetType === forTargetType) {
+            newState.byId[targetId].comments.push(action.payload.result);
           }
         }
       }
-    );
-  };
-}
+    }
+  );
 
 type CommentState = any;
 
-function mutate(state: CommentState, action: any): CommentState {
-  return produce(
-    state,
-    (newState: CommentState): void => {
-      switch (action.type) {
-        case Comment.DELETE.SUCCESS:
-          newState.byId[action.meta.id].text = null;
-          newState.byId[action.meta.id].author = null;
-      }
+const mutate = produce(
+  (newState: CommentState, action: any): void => {
+    switch (action.type) {
+      case Comment.DELETE.SUCCESS:
+        newState.byId[action.meta.id].text = null;
+        newState.byId[action.meta.id].author = null;
     }
-  );
-}
+  }
+);
 
 export default createEntityReducer({
   key: 'comments',
