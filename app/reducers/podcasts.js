@@ -3,6 +3,7 @@
 import { createSelector } from 'reselect';
 import createEntityReducer from 'app/utils/createEntityReducer';
 import { Podcast } from '../actions/ActionTypes';
+import produce from 'immer';
 
 export type PodcastEntity = {
   id: number,
@@ -12,17 +13,18 @@ export type PodcastEntity = {
   discription: string
 };
 
-const deletePodcast = (state: any, action: any) => {
-  switch (action.type) {
-    case Podcast.DELETE.SUCCESS:
-      return {
-        ...state,
-        items: state.items.filter(id => id !== action.meta.podcastId)
-      };
-    default:
-      return state;
+type State = any;
+
+const deletePodcast = produce(
+  (newState: State, action: any): void => {
+    switch (action.type) {
+      case Podcast.DELETE.SUCCESS:
+        newState.items = newState.items.filter(
+          id => id !== action.meta.podcastId
+        );
+    }
   }
-};
+);
 
 export default createEntityReducer({
   key: 'podcasts',

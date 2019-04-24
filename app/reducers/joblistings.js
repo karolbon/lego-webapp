@@ -3,6 +3,9 @@
 import { Joblistings } from '../actions/ActionTypes';
 import createEntityReducer from 'app/utils/createEntityReducer';
 import { createSelector } from 'reselect';
+import produce from 'immer';
+
+type State = any;
 
 export default createEntityReducer({
   key: 'joblistings',
@@ -10,18 +13,15 @@ export default createEntityReducer({
     fetch: Joblistings.FETCH,
     mutate: Joblistings.CREATE
   },
-  mutate(state, action) {
-    switch (action.type) {
-      case Joblistings.DELETE.SUCCESS: {
-        return {
-          ...state,
-          items: state.items.filter(id => id !== action.meta.id)
-        };
+  mutate: produce(
+    (newState: State, action: any): void => {
+      switch (action.type) {
+        case Joblistings.DELETE.SUCCESS:
+          newState.items = newState.items.filter(id => id !== action.meta.id);
+          break;
       }
-      default:
-        return state;
     }
-  }
+  )
 });
 
 export const selectJoblistings = createSelector(

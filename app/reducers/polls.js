@@ -4,6 +4,7 @@ import { createSelector } from 'reselect';
 import createEntityReducer from '../utils/createEntityReducer';
 import { Poll } from '../actions/ActionTypes';
 import { type Tags, type ID } from 'app/models';
+import produce from 'immer';
 
 export type PollEntity = {
   id: ID,
@@ -22,23 +23,24 @@ export type OptionEntity = {
   votes: number
 };
 
+type State = any;
+
 export default createEntityReducer({
   key: 'polls',
   types: {
     fetch: [Poll.FETCH, Poll.FETCH_ALL],
     mutate: Poll.CREATE
   },
-  mutate(state, action) {
-    switch (action.type) {
-      case Poll.DELETE.SUCCESS:
-        return {
-          ...state,
-          items: state.items.filter(id => action.meta.pollId !== id)
-        };
-      default:
-        return state;
+  mutate: produce(
+    (newState: State, action: any): void => {
+      switch (action.type) {
+        case Poll.DELETE.SUCCESS:
+          newState.items = newState.items.filter(
+            id => action.meta.pollId !== id
+          );
+      }
     }
-  }
+  )
 });
 
 export const selectPolls = createSelector(

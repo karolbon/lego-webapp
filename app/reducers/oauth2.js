@@ -3,6 +3,7 @@ import { createSelector } from 'reselect';
 
 import { OAuth2 } from '../actions/ActionTypes';
 import createEntityReducer from 'app/utils/createEntityReducer';
+import produce from 'immer';
 
 export type OAuth2ApplicationEntity = {
   id: number,
@@ -24,6 +25,8 @@ export type OAuth2GrantEntity = {
   scopes: Object
 };
 
+type State = any;
+
 export const oauth2Applications = createEntityReducer({
   key: 'oauth2Application',
   types: {
@@ -36,20 +39,16 @@ export const oauth2Grants = createEntityReducer({
   types: {
     fetch: OAuth2.FETCH_GRANTS
   },
-  mutate(state, action) {
-    switch (action.type) {
-      case OAuth2.DELETE_GRANT.SUCCESS: {
-        return {
-          ...state,
-          items: state.items.filter(
+  mutate: produce(
+    (newState: State, action: any): void => {
+      switch (action.type) {
+        case OAuth2.DELETE_GRANT.SUCCESS:
+          newState.items = newState.items.filter(
             grant => Number(grant) !== Number(action.meta.grantId)
-          )
-        };
+          );
       }
-      default:
-        return state;
     }
-  }
+  )
 });
 
 export const selectOAuth2Applications = createSelector(

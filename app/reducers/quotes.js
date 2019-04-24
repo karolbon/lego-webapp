@@ -6,6 +6,7 @@ import { createSelector } from 'reselect';
 import { mutateComments } from 'app/reducers/comments';
 import joinReducers from 'app/utils/joinReducers';
 import type { ID } from 'app/models';
+import produce from 'immer';
 
 export type QuoteEntity = {
   id: ID,
@@ -18,45 +19,27 @@ export type QuoteEntity = {
   createdAt?: string
 };
 
-function mutateQuote(state: any, action: any) {
-  switch (action.type) {
-    case Quote.DELETE.SUCCESS: {
-      const { quoteId } = action.meta;
-      return {
-        ...state,
-        items: state.items.filter(id => id !== quoteId)
-      };
+type State = any;
+
+const mutateQuote = produce(
+  (newState: State, action: any): void => {
+    switch (action.type) {
+      case Quote.DELETE.SUCCESS:
+        newState.items = newState.items.filter(
+          id => id !== action.meta.quoteId
+        );
+        break;
+
+      case Quote.UNAPPROVE.SUCCESS:
+        newState.byId[action.meta.quoteId].approved = false;
+        break;
+
+      case Quote.APPROVE.SUCCESS:
+        newState.byId[action.meta.quoteId].approved = true;
+        break;
     }
-    case Quote.UNAPPROVE.SUCCESS: {
-      const { quoteId } = action.meta;
-      return {
-        ...state,
-        byId: {
-          ...state.byId,
-          [quoteId]: {
-            ...state.byId[quoteId],
-            approved: false
-          }
-        }
-      };
-    }
-    case Quote.APPROVE.SUCCESS: {
-      const { quoteId } = action.meta;
-      return {
-        ...state,
-        byId: {
-          ...state.byId,
-          [quoteId]: {
-            ...state.byId[quoteId],
-            approved: true
-          }
-        }
-      };
-    }
-    default:
-      return state;
   }
-}
+);
 
 const mutate = joinReducers(mutateComments('quotes'), mutateQuote);
 

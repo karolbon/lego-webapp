@@ -7,6 +7,7 @@ import createEntityReducer from 'app/utils/createEntityReducer';
 import type Moment from 'moment-timezone';
 import { mutateComments } from 'app/reducers/comments';
 import joinReducers from 'app/utils/joinReducers';
+import produce from 'immer';
 
 export type MeetingEntity = {
   id: number,
@@ -25,17 +26,18 @@ export type MeetingSection = {
   meetings: Array<MeetingEntity>
 };
 
-function mutateMeetings(state: any, action: any) {
-  switch (action.type) {
-    case Meeting.DELETE.SUCCESS:
-      return {
-        ...state,
-        items: state.items.filter(id => action.meta.meetingId !== id)
-      };
-    default:
-      return state;
+type State = any;
+
+const mutateMeetings = produce(
+  (newState: State, action: any): void => {
+    switch (action.type) {
+      case Meeting.DELETE.SUCCESS:
+        newState.items = newState.items.filter(
+          id => action.meta.meetingId !== id
+        );
+    }
   }
-}
+);
 
 const mutate = joinReducers(mutateComments('meetings'), mutateMeetings);
 

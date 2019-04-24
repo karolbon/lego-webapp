@@ -1,7 +1,12 @@
+// @flow
+
 import { createSelector } from 'reselect';
 import createEntityReducer from 'app/utils/createEntityReducer';
 import { Membership, Group } from '../actions/ActionTypes';
 import { selectGroup } from './groups';
+import produce from 'immer';
+
+type State = any;
 
 export default createEntityReducer({
   key: 'memberships',
@@ -9,21 +14,19 @@ export default createEntityReducer({
     mutate: Membership.JOIN_GROUP,
     fetch: Group.MEMBERSHIP_FETCH
   },
-  mutate(state, action) {
-    switch (action.type) {
-      case Membership.LEAVE_GROUP.SUCCESS: {
-        const { groupId, username } = action.meta;
-        return {
-          ...state,
-          items: state.items.filter(i => {
-            const m = state.byId[i];
+  mutate: produce(
+    (newState: State, action: any): void => {
+      switch (action.type) {
+        case Membership.LEAVE_GROUP.SUCCESS: {
+          const { groupId, username } = action.meta;
+          newState.items = newState.items.filter(i => {
+            const m = newState.byId[i];
             return m.abakusGroup !== groupId || m.user !== username;
-          })
-        };
+          });
+        }
       }
     }
-    return state;
-  }
+  )
 });
 
 export const selectMembershipsForGroup = createSelector(

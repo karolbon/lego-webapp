@@ -7,6 +7,7 @@ import createEntityReducer from 'app/utils/createEntityReducer';
 import { selectGroupsWithType } from './groups';
 import { selectGroup } from 'app/reducers/groups';
 import { selectMembershipsForGroup } from 'app/reducers/memberships';
+import produce from 'immer';
 
 export type PageEntity = {
   id: number,
@@ -17,23 +18,24 @@ export type PageEntity = {
   picture: string
 };
 
+type State = any;
+
 export default createEntityReducer({
   key: 'pages',
   types: {
     fetch: Page.FETCH,
     mutate: Page.CREATE
   },
-  mutate(state, action) {
-    switch (action.type) {
-      case Page.DELETE.SUCCESS:
-        return {
-          ...state,
-          items: state.items.filter(id => action.meta.pageSlug !== id)
-        };
-      default:
-        return state;
+  mutate: produce(
+    (newState: State, action: any): void => {
+      switch (action.type) {
+        case Page.DELETE.SUCCESS:
+          newState.items = newState.items.filter(
+            id => action.meta.pageSlug !== id
+          );
+      }
     }
-  }
+  )
 });
 
 export const selectPageBySlug = createSelector(
