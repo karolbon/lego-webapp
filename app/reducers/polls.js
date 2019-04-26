@@ -4,7 +4,7 @@ import { createSelector } from 'reselect';
 import createEntityReducer from '../utils/createEntityReducer';
 import { Poll } from '../actions/ActionTypes';
 import { type Tags, type ID } from 'app/models';
-import { pull } from 'lodash';
+import { without } from 'lodash';
 import produce from 'immer';
 
 export type PollEntity = {
@@ -36,7 +36,7 @@ export default createEntityReducer({
     (newState: State, action: any): void => {
       switch (action.type) {
         case Poll.DELETE.SUCCESS:
-          pull(newState.items, action.meta.pollId);
+          newState.items = without(newState.items, action.meta.pollId);
       }
     }
   )

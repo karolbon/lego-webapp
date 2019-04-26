@@ -3,7 +3,7 @@
 import { Joblistings } from '../actions/ActionTypes';
 import createEntityReducer from 'app/utils/createEntityReducer';
 import { createSelector } from 'reselect';
-import { pull } from 'lodash';
+import { without } from 'lodash';
 import produce from 'immer';
 
 type State = any;
@@ -18,7 +18,7 @@ export default createEntityReducer({
     (newState: State, action: any): void => {
       switch (action.type) {
         case Joblistings.DELETE.SUCCESS:
-          pull(newState.items, action.meta.id);
+          newState.items = without(newState.items, action.meta.id);
           break;
       }
     }

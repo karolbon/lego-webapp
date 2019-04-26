@@ -7,7 +7,7 @@ import createEntityReducer from 'app/utils/createEntityReducer';
 import type Moment from 'moment-timezone';
 import { mutateComments } from 'app/reducers/comments';
 import joinReducers from 'app/utils/joinReducers';
-import { pull } from 'lodash';
+import { without } from 'lodash';
 import produce from 'immer';
 
 export type MeetingEntity = {
@@ -33,7 +33,7 @@ const mutateMeetings = produce(
   (newState: State, action: any): void => {
     switch (action.type) {
       case Meeting.DELETE.SUCCESS:
-        pull(newState.items, action.meta.meetingId);
+        newState.items = without(newState.items, action.meta.meetingId);
     }
   }
 );

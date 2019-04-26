@@ -3,7 +3,7 @@
 import { createSelector } from 'reselect';
 import createEntityReducer from 'app/utils/createEntityReducer';
 import { Podcast } from '../actions/ActionTypes';
-import { pull } from 'lodash';
+import { without } from 'lodash';
 import produce from 'immer';
 
 export type PodcastEntity = {
@@ -20,7 +20,7 @@ const deletePodcast = produce(
   (newState: State, action: any): void => {
     switch (action.type) {
       case Podcast.DELETE.SUCCESS:
-        pull(newState.items, action.meta.podcastId);
+        newState.items = without(newState.items, action.meta.podcastId);
     }
   }
 );
