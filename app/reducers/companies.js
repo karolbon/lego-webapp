@@ -85,9 +85,9 @@ function mutateCompanies(state, action) {
 
     case Company.ADD_SEMESTER_STATUS.SUCCESS: {
       const companyId = action.meta.companyId;
-      const semesterStatuses = state.byId[companyId].semesterStatuses.concat(
-        action.payload
-      );
+      const semesterStatuses = (
+        state.byId[companyId].semesterStatuses || []
+      ).concat(action.payload);
       return mergeObjects(state, {
         byId: {
           [companyId]: { semesterStatuses }
@@ -116,7 +116,7 @@ function mutateCompanies(state, action) {
           [companyId]: {
             ...state.byId[companyId],
             semesterStatuses: state.byId[companyId].semesterStatuses.filter(
-              status => status.id !== action.meta.semesterId
+              status => status.id !== action.meta.semesterStatusId
             )
           }
         }
